@@ -1,0 +1,12 @@
+
+### Add a deposit to Kivora Finance
+POST http://localhost:8080/api/transactions
+Content-Type: application/json
+
+{
+  "date": "2026-11-03",
+  "time": "14:30:00",
+  "description": "Test Deposit",
+  "vendor": "Demo",
+  "amount": 500.00
+}
