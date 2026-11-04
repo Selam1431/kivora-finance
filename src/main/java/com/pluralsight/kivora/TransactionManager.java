@@ -1,13 +1,13 @@
 package com.pluralsight.kivora;
 import java.util.ArrayList;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileWriter; // opens a file for writing
 import java.io.IOException;
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.io.FileReader; // opens file for reading
+import java.math.BigDecimal; // represent money accurately
+import java.time.LocalDate; // store the transaction date
+import java.time.LocalTime; // stores the transaction time
 
 
 
@@ -27,6 +27,7 @@ public class TransactionManager {
 
     }
 
+    // add a new transaction
     public void addTransaction(Transaction transaction) {
         // save the transaction first
         boolean saved = saveTransaction(transaction);
@@ -79,12 +80,14 @@ public class TransactionManager {
 
             String line;
 
-            // skip the reader row
-
-            reader.readLine();
-
             // read each transaction util the end of the file
             while ((line = reader.readLine()) != null) {
+
+                // skip the header if it exists
+                if (line.toLowerCase().startsWith("date|time")) {
+                    continue;
+                }
+
                 // separate the fields using the pipe character
                 String[] parts = line.split("\\|", -1);
 
@@ -106,7 +109,7 @@ public class TransactionManager {
                     // create a transaction objects
                     Transaction transaction = new Transaction(date, time, description, vendor, amount);
 
-                    // add the loaded transaction to our arraylist
+                    // add the loaded transaction to our arraylist store it in memory
 
                     transactions.add(transaction);
                 } catch (RuntimeException e) {
@@ -116,5 +119,9 @@ public class TransactionManager {
         } catch (IOException e) {
             System.out.println("Error loading transactions: " + e.getMessage());
         }
+    }
+    // return a copy of all stored transactions
+    public ArrayList<Transaction> getTransactions() {
+        return new ArrayList<>(transactions);
     }
 }
