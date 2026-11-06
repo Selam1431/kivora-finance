@@ -1,9 +1,7 @@
-
+// Receives AP requests still does the work filtering, search by vendor and calculating deposit, payment,s and balance
 package com.kivora.backend.service;
-
 import com.kivora.backend.model.Transaction;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,36 +12,34 @@ public class ReportService {
 
     private final TransactionService transactionService;
 
-    // Spring Boot provides our existing TransactionService
+    // Spring Boot provides existing TransactionService
     public ReportService(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
-
-    // Find transactions between two dates (inclusive)
     public ArrayList<Transaction> getTransactionsByDateRange(
             LocalDate startDate,
             LocalDate endDate) {
 
-        // Get all saved transactions
+        // we retrieve all saved transactions
         ArrayList<Transaction> transactions =
                 transactionService.getTransactions();
 
-        // Store matching transactions
+        // Storing match transactions
         ArrayList<Transaction> results = new ArrayList<>();
 
-        // Check each transaction
         for (Transaction transaction : transactions) {
 
             LocalDate date = transaction.getDate();
 
-            // Check if date is on or after startDate
+            // inclusive data range
+            // we check the date is on or after
             boolean afterStart = !date.isBefore(startDate);
 
-            // Check if date is on or before endDate
+            // we check the date is on or before
             boolean beforeEnd = !date.isAfter(endDate);
 
-            // Add transaction if both conditions are true
+            // add transaction if both conditions are true
             if (afterStart && beforeEnd) {
                 results.add(transaction);
             }
@@ -52,20 +48,15 @@ public class ReportService {
         return results;
     }
 
-
-    // Search transactions by vendor name
     public ArrayList<Transaction> searchByVendor(String vendorName) {
-
-        // Get all saved transactions
         ArrayList<Transaction> transactions =
                 transactionService.getTransactions();
 
         // Store matching transactions
         ArrayList<Transaction> results = new ArrayList<>();
 
-        // Check each transaction
+        // Check each transaction / enhance loop through
         for (Transaction transaction : transactions) {
-
             // Compare vendor names without case sensitivity
             if (transaction.getVendor().toLowerCase()
                     .contains(vendorName.toLowerCase())) {
@@ -77,8 +68,6 @@ public class ReportService {
         return results;
     }
 
-
-    // Search transactions using optional filters
     public ArrayList<Transaction> customSearch(
             LocalDate startDate,
             LocalDate endDate,
@@ -89,7 +78,6 @@ public class ReportService {
         // Store transactions matching all supplied filters
         ArrayList<Transaction> results = new ArrayList<>();
 
-        // Check each saved transaction
         for (Transaction transaction : transactionService.getTransactions()) {
 
             // Skip transactions before the start date
@@ -103,8 +91,6 @@ public class ReportService {
                     transaction.getDate().isAfter(endDate)) {
                 continue;
             }
-
-            // Check description only when provided
             if (description != null &&
                     !transaction.getDescription().toLowerCase()
                             .contains(description.toLowerCase())) {
@@ -124,26 +110,20 @@ public class ReportService {
                 continue;
             }
 
-            // Transaction matches every supplied filter
             results.add(transaction);
         }
 
         return results;
     }
 
-
-    // Calculate total deposits, payments, and net balance
     public FinancialSummary calculateTotals() {
 
-        // Get all saved transactions
         ArrayList<Transaction> transactions =
                 transactionService.getTransactions();
 
-        // Start both totals at zero
         BigDecimal totalDeposits = BigDecimal.ZERO;
         BigDecimal totalPayments = BigDecimal.ZERO;
 
-        // Go through every transaction
         for (Transaction transaction : transactions) {
 
             BigDecimal amount = transaction.getAmount();
@@ -170,9 +150,4 @@ public class ReportService {
                 netBalance
         );
     }
-
-
-
-
-
 }
