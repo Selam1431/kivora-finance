@@ -22,23 +22,22 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-// spring auto discover this class
+// tells springboot this class provides application logic
 @Service
 public class TransactionService {
 
-    // Store transactions in memory
+    // Store transactions in memory and the field cant reassigned
     private final ArrayList<Transaction> transactions;
-
-    // Use a separate CSV file for the backend
     private static final String FILE_PATH = "backend-transactions.csv";
     private final Path storageFile;
 
-    // Constructor
+    // Constructor use the configured file path or the default csv file
     @Autowired
     public TransactionService(
             @Value("${kivora.transactions.file:" + FILE_PATH + "}") String filePath) {
         this(Path.of(filePath));
     }
+
 
     public TransactionService(Path storageFile) {
         transactions = new ArrayList<>();
@@ -154,6 +153,8 @@ public class TransactionService {
         transactions.clear();
         for (Transaction transaction : next) transactions.add(copy(transaction));
     }
+
+    // save the data
 
     private void persist(List<Transaction> next) {
         Path parent = storageFile.toAbsolutePath().getParent();
