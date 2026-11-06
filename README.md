@@ -6,7 +6,7 @@ Ever wonder where your money went at the end of the month?
 
 **Kivora Finance** is built for anyone struggling to manage their money, keep track of spending, or understand where their income goes.
 
-Instead of guessing where your paycheck disappeared, Kivora helps you **track every dollar, understand your spending habits, and make smarter financial decisions** — all in one place.
+Instead of guessing where your paycheck disappeared, Kivora helps you **track every dollar, understand your spending habits, and make smarter financial decisions** all in one place.
 
 Built with **Java, Spring Boot, and React**, Kivora brings personal finance management into a simple, modern, and easy-to-use application.
 
