@@ -4,16 +4,18 @@ package com.kivora.backend.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.AssertTrue;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Transaction {
 
 
-    // The date when the transaction happened
+    private UUID id;
+
+
     @NotNull(message = "Transaction date is required")
     private LocalDate date;
 
@@ -39,6 +41,16 @@ public class Transaction {
 
     }
 
+    public Transaction(UUID id, LocalDate date, LocalTime time,
+                       String description, String vendor, BigDecimal amount) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.description = description;
+        this.vendor = vendor;
+        this.amount = amount;
+    }
+
     // Constructor: creates a transaction object
     public Transaction(LocalDate date, LocalTime time,
                        String description, String vendor,
@@ -52,6 +64,14 @@ public class Transaction {
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void setDate(LocalDate date) {
