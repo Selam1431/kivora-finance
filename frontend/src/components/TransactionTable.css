@@ -1,0 +1,281 @@
+.transactions-table {
+  min-width: 900px;
+}
+
+.transactions-custom-search {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 10px;
+  margin: -7px 0 20px;
+}
+
+.transactions-custom-search label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: #a99daf;
+  font-size: 10px;
+}
+
+.transactions-custom-search input {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  padding: 0 11px;
+  border: 1px solid #302a37;
+  border-radius: 10px;
+  outline: 0;
+  background: #141119;
+  color: #f4eff7;
+  font: inherit;
+  font-size: 12px;
+}
+
+.transactions-custom-search input::placeholder {
+  color: #756b7d;
+}
+
+.transactions-custom-search input:focus {
+  border-color: #8e68bd;
+  box-shadow: 0 0 0 2px #8e68bd30;
+}
+
+.transactions-custom-search input[aria-invalid="true"] {
+  border-color: #a45165;
+}
+
+.transaction-filter-error {
+  margin: -10px 0 18px;
+  color: #f1a1b2;
+  font-size: 11px;
+}
+
+@media (max-width: 1000px) {
+  .transactions-custom-search {
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .transactions-custom-search {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+}
+
+@media (max-width: 380px) {
+  .transactions-custom-search {
+    grid-template-columns: 1fr;
+  }
+}
+
+.transaction-actions-heading {
+  min-width: 112px;
+  text-align: center !important;
+}
+
+.table-pagination .current {
+  display: grid;
+  min-width: 76px;
+  place-items: center;
+  padding: 0 7px;
+  border: 1px solid #342e3c;
+  border-radius: 7px;
+  white-space: nowrap;
+}
+
+.transaction-row-actions {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.transaction-icon-button {
+  width: 34px;
+  height: 34px;
+  display: inline-grid;
+  place-items: center;
+  margin: 0 3px;
+  border: 1px solid #39313f;
+  border-radius: 9px;
+  background: #19151e;
+  color: #bba1ed;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s, transform .15s;
+}
+
+.transaction-icon-button svg,
+.delete-dialog-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.transaction-icon-button:hover {
+  transform: translateY(-1px);
+  border-color: #7e5aaa;
+  background: #251b31;
+  color: #dcc8ff;
+}
+
+.transaction-icon-button.delete-transaction {
+  color: #e593a4;
+}
+
+.transaction-icon-button.delete-transaction:hover {
+  border-color: #8b4e60;
+  background: #311d28;
+  color: #ffb3c0;
+}
+
+.transaction-icon-button:focus-visible,
+.confirm-delete-button:focus-visible,
+.transaction-confirm-dialog .form-cancel:focus-visible {
+  outline: 2px solid #c3a3ff;
+  outline-offset: 2px;
+}
+
+.transaction-icon-button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.transaction-action-status {
+  margin: 0 0 14px;
+  padding: 11px 14px;
+  border: 1px solid #2c5542;
+  border-radius: 9px;
+  background: #14231c;
+  color: #74e3ac;
+  font-size: 12px;
+}
+
+.transaction-confirm-dialog {
+  position: relative;
+  width: min(100%, 460px);
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+  padding: 29px;
+  border: 1px solid #44374d;
+  border-radius: 17px;
+  background: #17131d;
+  color: #f4eff7;
+  box-shadow: 0 24px 80px #0009;
+}
+
+.transaction-confirm-dialog .form-close {
+  cursor: pointer;
+}
+
+.delete-dialog-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  background: #33202a;
+  color: #f08b9e;
+}
+
+.delete-dialog-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.transaction-confirm-dialog .section-label {
+  margin: 0 0 8px;
+  color: #aa91c1;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+}
+
+.transaction-confirm-dialog h2 {
+  margin: 0;
+  color: #f5f0f8;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.transaction-confirm-dialog > p:not(.section-label) {
+  margin: 11px 0 22px;
+  color: #aa9fb3;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.transaction-confirm-dialog > p strong {
+  color: #f2edf6;
+  font-weight: 600;
+}
+
+.transaction-confirm-dialog .delete-dialog-error {
+  padding: 10px 12px;
+  border: 1px solid #6b3543;
+  border-radius: 9px;
+  background: #2b1820;
+  color: #ff9cac;
+  font-size: 12px;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.delete-dialog-actions .form-cancel,
+.confirm-delete-button {
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-dialog-actions .form-cancel {
+  border: 1px solid #39323f;
+  background: #201b26;
+  color: #ded5e5;
+}
+
+.confirm-delete-button {
+  border: 1px solid #8e4256;
+  background: #6f2e42;
+  color: #fff;
+}
+
+.confirm-delete-button:hover {
+  background: #87384e;
+}
+
+.confirm-delete-button:disabled,
+.delete-dialog-actions button:disabled,
+.transaction-confirm-dialog .form-close:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .transaction-confirm-dialog {
+    padding: 23px 19px;
+  }
+
+  .delete-dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .delete-dialog-actions button {
+    width: 100%;
+  }
+
+  .transaction-actions-heading {
+    min-width: 102px;
+  }
+}
