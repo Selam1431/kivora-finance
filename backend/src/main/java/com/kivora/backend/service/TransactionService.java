@@ -51,11 +51,14 @@ public class TransactionService {
         Transaction saved = copyWithId(transaction, UUID.randomUUID());
         ArrayList<Transaction> next = new ArrayList<>(transactions);
         next.add(saved);
+
+        // save first then update the list in memory
         persist(next);
         replaceInMemory(next);
         return copy(saved);
     }
 
+    // updating transaction without changing its ID
     public synchronized Transaction updateTransaction(UUID id, Transaction updated) {
         int index = findIndex(id);
         if (index < 0) throw new TransactionNotFoundException(id);
