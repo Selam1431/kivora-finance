@@ -1,9 +1,7 @@
 
 package com.kivora.backend.service;
-
 import com.kivora.backend.model.Transaction;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -18,20 +16,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-// tells springboot this class provides application logic
+/**
+ * Manages financial transactions for Kivora Finance.
+ *
+ * Handles transaction creation, updates, deletion,
+ * CSV persistence, and loading saved records.
+ */
 @Service
 public class TransactionService {
 
-    // Store transactions in memory and the field cant reassigned
     private final ArrayList<Transaction> transactions;
     private static final String FILE_PATH = "backend-transactions.csv";
     private final Path storageFile;
 
-    // Constructor use the configured file path or the default csv file
+    /**
+     * Creates the transaction service using the configured storage file.
+     *
+     * @param filePath the CSV file path provided by application configuration
+     */
     @Autowired
     public TransactionService(
             @Value("${kivora.transactions.file:" + FILE_PATH + "}") String filePath) {
@@ -39,13 +44,23 @@ public class TransactionService {
     }
 
 
+    /**
+     * Initializes the service and loads existing transactions.
+     *
+     * @param storageFile the path to the transaction CSV file
+     */
     public TransactionService(Path storageFile) {
         transactions = new ArrayList<>();
         this.storageFile = storageFile;
         loadTransactions();
     }
 
-    // Add a new transaction
+    /**
+     * Creates a transaction with a unique ID and saves it.
+     *
+     * @param transaction the transaction to add
+     * @return the newly saved transaction
+     */
     public synchronized Transaction addTransaction(Transaction transaction) {
         Transaction saved = copyWithId(transaction, UUID.randomUUID());
         ArrayList<Transaction> next = new ArrayList<>(transactions);
@@ -57,7 +72,14 @@ public class TransactionService {
         return copy(saved);
     }
 
-    // updating transaction without changing its ID
+    /**
+     * Updates an existing transaction while preserving its ID.
+     *
+     * @param id the ID of the transaction to update
+     * @param updated the new transaction details
+     * @return the updated transaction
+     * @throws TransactionNotFoundException if the ID does not exist
+     */
     public synchronized Transaction updateTransaction(UUID id, Transaction updated) {
         int index = findIndex(id);
         if (index < 0) throw new TransactionNotFoundException(id);
@@ -70,6 +92,12 @@ public class TransactionService {
         return copy(replacement);
     }
 
+    /**
+     * Deletes a transaction from memory and CSV storage.
+     *
+     * @param id the ID of the transaction to delete
+     * @throws TransactionNotFoundException if the ID does not exist
+     */
     public synchronized void deleteTransaction(UUID id) {
         int index = findIndex(id);
         if (index < 0) throw new TransactionNotFoundException(id);
@@ -80,7 +108,14 @@ public class TransactionService {
         replaceInMemory(next);
     }
 
-    // Load saved transactions from CSV
+    /**
+     * Loads transactions from CSV storage into memory.
+     *
+     * Also migrates legacy records by assigning unique IDs.
+     *
+     * @throws IllegalStateException if the file cannot be read
+     *                               or contains invalid records
+     */
     public synchronized void loadTransactions() {
         if (!Files.exists(storageFile)) {
             replaceInMemory(new ArrayList<>());
@@ -135,7 +170,11 @@ public class TransactionService {
         }
     }
 
-    // Return a copy of stored transactions
+    /**
+     * Returns copies of all stored transactions.
+     *
+     * @return a list of saved transactions
+     */
     public synchronized ArrayList<Transaction> getTransactions() {
         ArrayList<Transaction> copy = new ArrayList<>();
         for (Transaction transaction : transactions) copy.add(copy(transaction));

@@ -7,39 +7,48 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import com.kivora.backend.model.FinancialSummary;
 
+/**
+ * Provides financial reporting and transaction search functionality.
+ *
+ * Supports date filtering, vendor searches, custom searches,
+ * and financial summary calculations.
+ */
 @Service
 public class ReportService {
 
     private final TransactionService transactionService;
 
-    // Spring Boot provides existing TransactionService
+    /**
+     * Creates the report service using the transaction service.
+     *
+     * @param transactionService provides access to saved transactions
+     */
     public ReportService(TransactionService transactionService) {
         this.transactionService = transactionService;
     }
 
+    /**
+     * Retrieves transactions within the specified date range,
+     * including the start and end dates.
+     *
+     * @param startDate the beginning of the date range
+     * @param endDate the end of the date range
+     * @return transactions within the specified dates
+     */
     public ArrayList<Transaction> getTransactionsByDateRange(
             LocalDate startDate,
             LocalDate endDate) {
 
-        // we retrieve all saved transactions
         ArrayList<Transaction> transactions =
                 transactionService.getTransactions();
 
-        // Storing match transactions
         ArrayList<Transaction> results = new ArrayList<>();
-
         for (Transaction transaction : transactions) {
-
             LocalDate date = transaction.getDate();
 
-            // inclusive data range
-            // we check the date is on or after
             boolean afterStart = !date.isBefore(startDate);
-
-            // we check the date is on or before
             boolean beforeEnd = !date.isAfter(endDate);
 
-            // add transaction if both conditions are true
             if (afterStart && beforeEnd) {
                 results.add(transaction);
             }
@@ -47,17 +56,19 @@ public class ReportService {
 
         return results;
     }
-
+    /**
+     * Searches transactions by vendor name, ignoring case.
+     *
+     * @param vendorName the vendor name or partial name to search for
+     * @return transactions matching the vendor name
+     */
     public ArrayList<Transaction> searchByVendor(String vendorName) {
         ArrayList<Transaction> transactions =
                 transactionService.getTransactions();
 
-        // Store matching transactions
         ArrayList<Transaction> results = new ArrayList<>();
 
-        // Check each transaction / enhance loop through
         for (Transaction transaction : transactions) {
-            // Compare vendor names without case sensitivity
             if (transaction.getVendor().toLowerCase()
                     .contains(vendorName.toLowerCase())) {
 
@@ -68,6 +79,17 @@ public class ReportService {
         return results;
     }
 
+    /**
+     * Searches transactions using optional filters.
+     * Only non-null filters are applied.
+     *
+     * @param startDate the earliest transaction date, or null
+     * @param endDate the latest transaction date, or null
+     * @param description the description to search for, or null
+     * @param vendor the vendor name to search for, or null
+     * @param amount the exact transaction amount, or null
+     * @return transactions matching all provided filters
+     */
     public ArrayList<Transaction> customSearch(
             LocalDate startDate,
             LocalDate endDate,
@@ -75,18 +97,15 @@ public class ReportService {
             String vendor,
             BigDecimal amount) {
 
-        // Store transactions matching all supplied filters
         ArrayList<Transaction> results = new ArrayList<>();
 
         for (Transaction transaction : transactionService.getTransactions()) {
 
-            // Skip transactions before the start date
             if (startDate != null &&
                     transaction.getDate().isBefore(startDate)) {
                 continue;
             }
 
-            // Skip transactions after the end date
             if (endDate != null &&
                     transaction.getDate().isAfter(endDate)) {
                 continue;
@@ -97,14 +116,11 @@ public class ReportService {
                 continue;
             }
 
-            // Check vendor only when provided
             if (vendor != null &&
                     !transaction.getVendor().toLowerCase()
                             .contains(vendor.toLowerCase())) {
                 continue;
             }
-
-            // Check amount only when provided
             if (amount != null &&
                     transaction.getAmount().compareTo(amount) != 0) {
                 continue;
@@ -116,8 +132,15 @@ public class ReportService {
         return results;
     }
 
+    /**
+     * Calculates total deposits, total payments, and net balance.
+     *
+     * Positive amounts are deposits, while negative amounts
+     * represent payments.
+     *
+     * @return a financial summary containing the calculated totals
+     */
     public FinancialSummary calculateTotals() {
-
         ArrayList<Transaction> transactions =
                 transactionService.getTransactions();
 
@@ -127,23 +150,17 @@ public class ReportService {
         for (Transaction transaction : transactions) {
 
             BigDecimal amount = transaction.getAmount();
-
-            // Positive amounts represent deposits
             if (amount.compareTo(BigDecimal.ZERO) > 0) {
                 totalDeposits = totalDeposits.add(amount);
             }
 
-            // Negative amounts represent payments
             else if (amount.compareTo(BigDecimal.ZERO) < 0) {
                 totalPayments = totalPayments.add(amount.abs());
             }
         }
-
-        // Remaining money = deposits - payments
         BigDecimal netBalance =
                 totalDeposits.subtract(totalPayments);
 
-        // Return the results as an object
         return new FinancialSummary(
                 totalDeposits,
                 totalPayments,
