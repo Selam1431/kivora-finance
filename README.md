@@ -131,5 +131,3 @@ From the `backend` directory:
 The test suite uses JUnit 5 and Spring MockMvc to verify transaction management, persistence, validation, and API behavior.
 
 ---
-
----
