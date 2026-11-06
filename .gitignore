@@ -46,3 +46,14 @@ build/
 
 ### Windows ###
 Thumbs.db
+
+# Kivora financial data
+backend-transactions.csv
+backend-transactions-backup.csv
+
+# Maven generated files
+**/target/
+
+# Ignore CLI transaction data
+/cli/transactions.csv
+/cli/transactions_ new.csv
